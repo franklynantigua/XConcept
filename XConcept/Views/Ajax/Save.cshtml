@@ -1,0 +1,137 @@
+﻿@model XConcept.articulo
+
+@{
+    ViewBag.Title = "Save";
+}
+
+<style>
+    .success {
+       border:"
+    }
+</style>
+
+
+<h2>Save</h2>
+
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>articulo</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.idarticulo, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.idarticulo, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.idarticulo, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.codigo, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.codigo, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.codigo, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.nombre, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.nombre, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.nombre, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.descripcion, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.descripcion, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.descripcion, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.idcategoria, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.idcategoria, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.idcategoria, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.idpresentacion, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.idpresentacion, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.idpresentacion, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="button" value="Save" id="AjaxPost" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+    <div id="content">
+        
+
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+
+    $(document).ready(function() {
+            $("#AjaxPost")
+                .click(function() {
+                    $("#content").html("<b> Please wait .....<b>");
+
+                    var dataObject = {
+                        codigo: $("#codigo").val(),
+                        nombre: $("#nombre").val(),
+                        descripcion: $("#descripcion").val()
+                    };
+
+                    $.ajax({
+                        url: "@Url.Action("Save", "Ajax")",
+                        type: "POST",
+                        data: dataObject,
+                        dataType: "json",
+                        success: function(data) {
+
+                            if (data.toString() == "Successfully Saved") {
+                                $("#codigo").val('')  ;
+                                $("#nombre").val('');
+                                $("#descripcion").val(''); 
+                                $("#content").html("<div class = 'success'>" + data + " </div>");
+
+                                
+                            } 
+                            else {
+                                $("#content").html("<div class = 'Failed'>" + data + "</div>");
+
+                            }
+                      
+
+                        },
+                        error:function () {
+
+                            $("#content").html("<div class = 'Failed'> Error ! Please try again </div>");
+                        }
+                    });
+                });
+
+        });
+
+   </script>
+    }

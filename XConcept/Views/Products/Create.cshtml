@@ -1,0 +1,105 @@
+﻿@model XConcept.Models.Product
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<style>
+    .success {
+        border: solid 1xp rgb(13, 109, 0);
+        width: 300px;
+        padding: 5px;
+        background-color: rgb(215, 255, 219);
+    }
+
+    .failed {
+        border: solid 1xp red
+        width: 300px;
+        padding: 5px;
+        background-color: rgb(255, 229, 229);
+    }
+</style>
+
+
+<h2>Create</h2>
+
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>Product</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Category, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Category, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Category, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        
+        
+        
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="button" value="Create" id="AjaxPost" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+}<div class="content">
+
+</div>
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+<script>
+    $(document).ready(function () {
+            $("#AjaxPost")
+                .click(function() {
+                    $("#content").html("<b> Please wait .....<b>");
+
+                    var dataObject = {
+                        Description: $("#Description").val(),
+                        Category: $("#Category").val()
+                    };
+                    $.ajax({
+                        url: "@Url.Action("Create", "Products")",
+                        type: "POST",
+                        data: dataObject,
+                        dataType: "json",
+                        success: function(data) {
+
+                            if (data.toString() == "Successfully Saved") {
+                                $("##Description").val('');
+                                $("#Category").val('');
+                                $("#content").html("<div class = 'success'>" + data + " </div>"); 
+                            }
+                            else {
+                                $("#content").html("<div class = 'Failed'>" + data + "</div>");
+                            } 
+                        },
+                        error:function () {
+
+                            $("#content").html("<div class = 'Failed'> Error ! Please try again </div>");
+                        }
+                    });
+                });
+              });
+    </script>
+}
