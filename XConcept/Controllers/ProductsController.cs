@@ -56,7 +56,7 @@ namespace XConcept.Controllers
                 {
                     message = " Error please try again";
                 }
-                return RedirectToAction("Index");
+                
             }
             else
             {
@@ -95,13 +95,18 @@ namespace XConcept.Controllers
 
           [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Description,Category")] Product product)
-        {
+        public ActionResult Edit( Product product)
+          {
+              string message = "";
             if (ModelState.IsValid)
             {
                 db.Entry(product).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
+            }
+            if (Request.IsAjaxRequest())
+            {
+                return new JsonResult { Data = message, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
             }
             return View(product);
         }

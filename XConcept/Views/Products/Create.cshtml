@@ -13,8 +13,7 @@
     }
 
     .failed {
-        border: solid 1xp red
-        width: 300px;
+        border: solid 1xp red width: 300px;
         padding: 5px;
         background-color: rgb(255, 229, 229);
     }
@@ -24,10 +23,10 @@
 <h2>Create</h2>
 
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>Product</h4>
         <hr />
@@ -47,31 +46,26 @@
                 @Html.ValidationMessageFor(model => model.Category, "", new { @class = "text-danger" })
             </div>
         </div>
-        
-        
-        
+
+
+
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="button" value="Create" id="AjaxPost" class="btn btn-primary" />
+                @Html.ActionLink("Back to List", "Index")
             </div>
         </div>
     </div>
-}<div class="content">
+}   <div id="content">
 
-</div>
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
-
+   </div>
+ 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-
-<script>
-    $(document).ready(function () {
-            $("#AjaxPost")
-                .click(function() {
+    <script>
+        $(document).ready(function () {
+            $("#AjaxPost").click(function () {
                     $("#content").html("<b> Please wait .....<b>");
 
                     var dataObject = {
@@ -83,23 +77,23 @@
                         type: "POST",
                         data: dataObject,
                         dataType: "json",
-                        success: function(data) {
+                        success: function (data) {
 
                             if (data.toString() == "Successfully Saved") {
-                                $("##Description").val('');
+                                $("#Description").val('');
                                 $("#Category").val('');
-                                $("#content").html("<div class = 'success'>" + data + " </div>"); 
+                                $("#content").html("<div class = 'success'>" + data + " </div>");
                             }
                             else {
-                                $("#content").html("<div class = 'Failed'>" + data + "</div>");
-                            } 
+                                $("#content").html("<div class = 'failed'>" + data + "</div>");
+                            }
                         },
-                        error:function () {
+                        error: function () {
 
-                            $("#content").html("<div class = 'Failed'> Error ! Please try again </div>");
+                            $("#content").html("<div class = 'failed'> Error ! Please try again </div>");
                         }
                     });
                 });
-              });
+        });
     </script>
 }
